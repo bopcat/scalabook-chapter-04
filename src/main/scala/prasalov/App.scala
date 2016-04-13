@@ -54,17 +54,51 @@ object App {
 
     println("Ex. 4.5")
 
-    println("traverse: " + Option.traverse(List(1, 2, 3))(divideByZero))
-    println("traverse with None: " + Option.traverse(List(1, 0, 3))(divideByZero))
+    println("traverse: " + Option.traverse1(List(1, 2, 3))(divideByZero))
+    println("traverse with None: " + Option.traverse1(List(1, 0, 3))(divideByZero))
+
+    println()
+    println("**********")
+    println()
+
+    println("Ex. 4.6")
+
+    val right: Either[Exception, Int] = Right(5)
+    val left: Either[Exception, Int] = Left(new Exception)
+    println("map of right: " + right.map(_ * 2))
+    println("map of left: " + left.map(_ * 2))
+
+    println("flatMap of right: " + right.flatMap((x) => Right(x * 2)))
+    println("flatMap of left: " + left.flatMap((x) => Right(x * 2)))
+
+    println("orElse of right: " + right.orElse(Right(0)))
+    println("orElse of left: " + left.orElse(Right(0)))
+
+    println("map2 of right: " + right.map2(Right(5))(_ + _))
+    println("map2 of right and left: " + right.map2(left)(_ + _))
+    println("map2 of left: " + left.map2(Right(5))(_ + _))
+
+    println()
+    println("**********")
+    println()
+
+    println("Ex. 4.7")
+    println("traverse: " + Either.traverse(List(1, 2, 3))(divideByZero1))
+    println("traverse with Left: " + Either.traverse(List(1, 0, 3))(divideByZero1))
+
+    println("sequence: " + Either.sequence(List(Right(1), Right(2), Right(3))))
+    println("sequence with Left: " + Either.sequence(List(Right(1), Left(new NullPointerException), Right(3))))
+
   }
 
   def intToOption(x: Int) = if (x == 0) None else Some(x)
   def isNotZero(x: Int) = x != 0
   def divideByZero(x: Int) = if (x == 0) None else Some(10 / x)
+  def divideByZero1(x: Int) = if (x == 0) Left(new IllegalArgumentException) else Right(10 / x)
 
   def mean(ys: Seq[Double]) : Option[Double] = ys match {
     case Nil => None
-    case _ => Some(ys.foldLeft(0.0)(_ + _) / ys.size)
+    case _ => Some(ys.sum / ys.size)
   }
 
   def variance(xs: Seq[Double]): Option[Double] =

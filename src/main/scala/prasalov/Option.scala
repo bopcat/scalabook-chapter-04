@@ -54,6 +54,8 @@ object Option {
     case (a :: as, acc) => traverse(as, map2(f(a), acc)((x, list) => list :+ x))(f)
   }
 
+  def traverse1[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = a.foldRight[Option[List[B]]](Some(Nil))((x, y) => map2(f(x), y)((x, list) => x :: list))
+
   def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = traverse(a, Some(Nil))(f)
 
   def sequence[A](a: List[Option[A]]): Option[List[A]] = traverse(a)((x) => x)
